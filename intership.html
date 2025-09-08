@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التجمعات الصحية في المملكة العربية السعودية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c6e9b;
+            --secondary-color: #4a8db7;
+            --accent-color: #d4e8f7;
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+            --border-color: #ddd;
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .description {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color var(--transition-speed);
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .search-box {
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 500px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .headers-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .grid-header {
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+        }
+        
+        .grid-header:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .grid-header.active {
+            background: linear-gradient(to right, #1c4e74, #2c6e9b);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), inset 0 0 0 2px white;
+        }
+        
+        .grid-header .counter {
+            background-color: white;
+            color: var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .cluster-content {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .cluster-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hospitals-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .hospital {
+            background-color: var(--light-gray);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        
+        .hospital:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .headers-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .headers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 {
+                font-size: 2.4rem;
+            }
+            
+            .description {
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .headers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .grid-header {
+                min-height: 100px;
+                padding: 15px;
+            }
+            
+            .hospitals-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .grid-header {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .grid-header .counter {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>التجمعات الصحية في المملكة العربية السعودية</h1>
+        <p class="description">دليل شامل للتجمعات الصحية والمستشفيات التابعة لها في مختلف مناطق المملكة. انقر على أي تجمع لرؤية المستشفيات التابعة له.</p>
+    </header>
+
+    <main>
+        <input type="text" class="search-box" placeholder="ابحث عن مستشفى أو تجمع...">
+        
+        <div class="controls">
+            <button id="expand-all">فتح جميع التجمعات</button>
+            <button id="collapse-all">غلق جميع التجمعات</button>
+        </div>
+
+        <div class="headers-grid">
+            <!-- Row 1 -->
+            <div class="grid-header" data-cluster="1">
+                <span>تجمع جدة الصحي الأول</span>
+            </div>
+            <div class="grid-header" data-cluster="2">
+                <span>تجمع جدة الصحي الثاني</span>
+               
+            </div>
+            <div class="grid-header" data-cluster="3">
+                <span>تجمع الرياض الصحي الأول</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="4">
+                <span>تجمع الرياض الصحي الثاني</span>
+                
+            </div>
+            
+            <!-- Row 2 -->
+            <div class="grid-header" data-cluster="5">
+                <span>تجمع الرياض الصحي الثالث</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="6">
+                <span>تجمع القصيم الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="7">
+                <span>تجمع الشرقية الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="8">
+                <span>تجمع الأحساء الصحي</span>
+                
+            </div>
+            
+            <!-- Row 3 -->
+            <div class="grid-header" data-cluster="9">
+                <span>تجمع حفر الباطن الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="10">
+                <span>تجمع مكة المكرمة الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="11">
+                <span>تجمع المدينة المنورة الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="12">
+                <span>تجمع الطائف الصحي</span>
+                
+            </div>
+            
+            <!-- Row 4 -->
+            <div class="grid-header" data-cluster="13">
+                <span>تجمع حائل الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="14">
+                <span>تجمع تبوك الصحي</span>
+               
+            </div>
+            <div class="grid-header" data-cluster="15">
+                <span>تجمع الجوف الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="16">
+                <span>تجمع الحدود الشمالية الصحي</span>
+                
+            </div>
+            
+            <!-- Row 5 -->
+            <div class="grid-header" data-cluster="17">
+                <span> تجمع عسير الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="18">
+                <span>تجمع نجران الصحي</span>
+               
+            </div>
+            <div class="grid-header" data-cluster="19">
+                <span>تجمع جازان الصحي</span>
+                
+            </div>
+            <div class="grid-header" data-cluster="20">
+                <span>تجمع الباحة الصحي</span>
+               
+            </div>
+        </div>
+
+        <!-- Cluster 1 Content -->
+        <div class="cluster-content" id="cluster-1">
+            <h2>تجمع جدة الصحي الأول</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى شرق جدة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الثغر العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك عبد العزيز ومركز الأورام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أضم العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الليث العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة والصحة النفسية- الخدمات النفسية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">تجمع الرياض الصحي الأول</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 2 Content -->
+        <div class="cluster-content" id="cluster-2">
+            <h2>تجمع جدة الصحي الثاني</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فهد العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع الملك عبدالله الطبي ومستشفى الولادة والأطفال التخصصي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العزيزية للأطفال</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العيون</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رابغ العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة والصحة النفسية – خدمات إرادة</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 3 Content -->
+        <div class="cluster-content" id="cluster-3">
+            <h2>تجمع الرياض الصحي الأول</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك سلمان</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الإيمان العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الإمام عبدالرحمن الفيصل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الرعاية المديدة بالرياض</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك خالد بالخرج</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال بالخرج</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى إrادة والصحة النفسية بالخرج</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير سلمان بن محمد بالدلم</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى وادي الدواسر العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى السليل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حوطة بني تميم العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأفلاج العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القويعية العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المزاحمية العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الرين العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحريق العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الخاصرة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رويضة العرض العام</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 4 Content -->
+        <div class="cluster-content" id="cluster-4">
+            <h2>تجمع الرياض الصحي الثاني</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير محمد بن عبدالعزيز</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى اليمامة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك خالد بالمجمعة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الزلفي العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حوطة سدير</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير ناصر بن سعد السديري بالغاط</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى اﻷرطاوية العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى تمير العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رماح العام</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 5 Content -->
+        <div class="cluster-content" id="cluster-5">
+            <h2>تجمع الرياض الصحي الثالث</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الدرعية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الدوادمي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى شقراء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى عفيف</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حريملاء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى البجادية العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى نفي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى وثيلان</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رفايع الجمش</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ضرما العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ساجر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى مارات</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ثادق العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة للصحة النفسية الرياض</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 6 Content -->
+        <div class="cluster-content" id="cluster-6">
+            <h2>تجمع القصيم الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فهد التخصصي ببريدة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بريدة المركزي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك سعود في عنيزة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الرس العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الصحة النفسية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى البكيرية العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المذنب العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى البدع العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى عيون الجواء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الإنعاش في عنيزة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رياض الخبراء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى عقلة الصقور العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى قصييبة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى النبهانية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأسياح</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى قباء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ضارية العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">المركز الطبي التخصصي مستشفى الملك فهد</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">حديثي الولادة والأطفال</a></div>
+            </div>
+        </div>
+        <!-- Cluster 7 Content -->
+        <div class="cluster-content" id="cluster-7">
+            <h2>تجمع الشرقية الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع الدمام الطبي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال بالدمام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مركز سعود البابطين لطب وجراحة القلب</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الجبيل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القطيف المركزي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الخفجي العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الرفيعة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بقيق العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى راس تنورة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى صفوى العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى عنك العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير سلطان بمليجه</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى النعيرية العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الظهران العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى سلوى العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى البطحاء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الامير سلطان بالعريعره</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى قرية العليا العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة والصحة النفسية (مركز إعادة التأهيل)</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الامير محمد بن فهد لامراض الدم الوراثية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة والصحة النفسية بالدمام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العيون التخصصى بالظهرan</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 8 Content -->
+        <div class="cluster-content" id="cluster-8">
+            <h2>تجمع الأحساء الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فهد بالهفوف</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير سعود بن جلوي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فيصل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العمران العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الصحة النفسية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الجبر للعيون والأنف والاذن والحنجرة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الشيخ حسن العفالق للرعاية المديدة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مركز الأمير سلطان لمعالجة أمراض وجراحة القلب</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى مدينة العيون العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الجفر العام</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 9 Content -->
+        <div class="cluster-content" id="cluster-9">
+            <h2>تجمع حفر الباطن الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى السعيرة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القيصومة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك خالد العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى إرادة والصحة النفسية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الرعاية المديدة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حفر الباطن المركزي</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 10 Content -->
+        <div class="cluster-content" id="cluster-10">
+            <h2>تجمع مكة المكرمة الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك عبد العزيز</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فيصل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حراء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى خليص</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الكامل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أجياد للطوارئ</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى النور التخصصي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ابن سينا</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى نمرة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ثريبان العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى جنوب القنفذة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القنفذة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المظيلف العام</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 11 Content -->
+        <div class="cluster-content" id="cluster-11">
+            <h2>تجمع المدينة المنورة الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فهد العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أحد العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى التأهيل الطبي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير عبدالمحسن بن عبدالعزيز بالعلا</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الميقات العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المهد العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى وادي الفرع</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العيص</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى خيبر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بدر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ينبع النخل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحسو</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحمنة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ينبع العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحناكية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى السلام الوقفي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحرم</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 12 Content -->
+        <div class="cluster-content" id="cluster-12">
+            <h2>تجمع الطائف الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع الملك فيصل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك عبد العزيز التخصصي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الصحة النفسية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأطفال</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مركز طب الأسنان التخصصي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المحاني</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المويه</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى تربة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رنية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى قيا</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القريع</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ميسان</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى السحن</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ظلم</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الخرمة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أم الدوم</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 13 Content -->
+        <div class="cluster-content" id="cluster-13">
+            <h2>13. تجمع حائل الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى السليمي العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الشملي العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الشنان العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى شراف</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى سميراء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أجا للرعاية المديدة والتأهيل الطبي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الغزالة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحائط العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك خالد بحائل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بقعاء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حائل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى موقق العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة و الأطفال بحائل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة للصحة النفسية بحائل</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 14 Content -->
+        <div class="cluster-content" id="cluster-14">
+            <h2>تجمع تبوك الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك خالد المدني</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الوجه العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى تيماء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حقل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى املج العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ضباء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى اشواق</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى البدع العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأطفال والولادة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة للصحة النفسية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فهد التخصصي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أبو راكة العام</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 15 Content -->
+        <div class="cluster-content" id="cluster-15">
+            <h2>تجمع الجوف الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير متعب بن عبد العزيز</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القريات العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى طبرجل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى دومة الجندل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فيصل</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحديثة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العيسوية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى صوير العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ميقوع العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ابو عجرم العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك عبد العزيز التخصصي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الصحة النفسية بالقريات</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال بسكاكا</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">الصحة النفسية والتعافي في الجوف</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 16 Content -->
+        <div class="cluster-content" id="cluster-16">
+            <h2>تجمع الحدود الشمالية الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى برج الشمال الطبي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى طريف العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير عبد العزيز بن مساعد بن جلوي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رفحاء العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العويقيلة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى شعبة نصاب العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى النساء والولادة والأطفال بعرعر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة والصحة النفسية بعرعر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الرعاية المديدة بعرعر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى النساء والولادة والأطفال برفحاء</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى جديدة عرعر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مركز الأمير عبدالله بن عبدالعزيز بن مساعد لطب وجراحة القلب بعرعر</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 17 Content -->
+        <div class="cluster-content" id="cluster-17">
+            <h2>تجمع عسير الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى عسير المركزي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى محايل العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى خميس مشيط العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى سراة عبيدة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ظهران الجنوب العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى النماص العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بللسمر العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المجاردة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى رجال ألمع العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بلحمر العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحرجة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى تنومة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى البرك العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أحد رفيدة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القحمة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الفرشة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى خميس مشيط للولادة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال بأبها</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الصحة النفسية بعسير</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المضة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مركز الأمير فيصل بن خالد لطب أمراض و جراحة القلب</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك عبدالله ببيشة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال ببيشة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى النقاهة و الصحة النفسية ببيشة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى سبت العلايا</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى تثليث العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى تبالة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ترج العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى البشائر العام</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 18 Content -->
+        <div class="cluster-content" id="cluster-18">
+            <h2>تجمع نجران الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك خالد</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة و الصحة النفسية</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى نجرan العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة والأطفال</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى شرورة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى حبونا</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ثار</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى يدمة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بدر الجنوب</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى خباش</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى نجران العام الجديد</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 19 Content -->
+        <div class="cluster-content" id="cluster-19">
+            <h2>تجمع جازان الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير محمد بن ناصر</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى إرادة والصحة النفسية بجازان</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى صامطة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى صبيا العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى جازان العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ابو عريش العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بيش العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الفرسان العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الفيفا العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العارضة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى أحد المسارحة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الدرب العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الريث العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الطوال العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الموسم العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى بني مالك العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى ضمد العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الحرث العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العيدابي العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمراض الصدرية بجازان</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى جازان التخصصي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فهد المركزي بجازان</a></div>
+            </div>
+        </div>
+
+        <!-- Cluster 20 Content -->
+        <div class="cluster-content" id="cluster-20">
+            <h2>تجمع الباحة الصحي</h2>
+            <div class="hospitals-container">
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الأمير مشاري بن سعود</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الملك فهد بالباحة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المخواة العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى قلوه العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى القرى العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى المندق العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الولادة بالحجرة</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى العقيق العام</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مجمع إرادة للالصحة النفسية ببلجرشي</a></div>
+                <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">مستشفى الرعاية المديدة</a></div>
+            </div>
+        </div>
+
+        <!-- Additional cluster contents would be added here -->
+        <!-- For brevity, I'm showing 6 clusters but the full code would include all 20 -->
+
+    </main>
+
+    <footer>
+        <p>للتقديم للامتياز والاشراف الاكاديمي بقم بالنقر علي المستشفي </p>
+        <p>مركز المستقبل للتدريب الصحي </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gridHeaders = document.querySelectorAll('.grid-header');
+            const clusterContents = document.querySelectorAll('.cluster-content');
+            const searchBox = document.querySelector('.search-box');
+            const expandAllBtn = document.getElementById('expand-all');
+            const collapseAllBtn = document.getElementById('collapse-all');
+            
+            // Function to show a specific cluster
+            function showCluster(clusterNumber) {
+                // Hide all cluster contents
+                clusterContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Remove active class from all headers
+                gridHeaders.forEach(header => {
+                    header.classList.remove('active');
+                });
+                
+                // Show the selected cluster content
+                const selectedContent = document.getElementById(`cluster-${clusterNumber}`);
+                if (selectedContent) {
+                    selectedContent.classList.add('active');
+                }
+                
+                // Activate the selected header
+                const selectedHeader = document.querySelector(`.grid-header[data-cluster="${clusterNumber}"]`);
+                if (selectedHeader) {
+                    selectedHeader.classList.add('active');
+                    
+                    // Scroll to the content
+                    selectedContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+            
+            // Add click event to each grid header
+            gridHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const clusterNumber = this.getAttribute('data-cluster');
+                    showCluster(clusterNumber);
+                });
+            });
+            
+            // Expand all clusters
+            expandAllBtn.addEventListener('click', function() {
+                clusterContents.forEach(content => {
+                    content.classList.add('active');
+                });
+                
+                gridHeaders.forEach(header => {
+                    header.classList.add('active');
+                });
+            });
+            
+            // Collapse all clusters
+            collapseAllBtn.addEventListener('click', function() {
+                clusterContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                gridHeaders.forEach(header => {
+                    header.classList.remove('active');
+                });
+            });
+            
+            // Search functionality
+            searchBox.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const hospitals = document.querySelectorAll('.hospital');
+                
+                hospitals.forEach(hospital => {
+                    const hospitalText = hospital.textContent.toLowerCase();
+                    if (hospitalText.includes(searchTerm)) {
+                        hospital.style.display = 'block';
+                        // Show the parent cluster if match found
+                        const clusterContent = hospital.closest('.cluster-content');
+                        if (clusterContent) {
+                            clusterContent.classList.add('active');
+                            const clusterNumber = clusterContent.id.split('-')[1];
+                            const header = document.querySelector(`.grid-header[data-cluster="${clusterNumber}"]`);
+                            if (header) {
+                                header.classList.add('active');
+                            }
+                        }
+                    } else {
+                        hospital.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Show the first cluster by default
+            if (gridHeaders.length > 0) {
+                showCluster(1);
+            }
+        });
+    </script>
+</body>
+</html>
