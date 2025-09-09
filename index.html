@@ -248,7 +248,7 @@
     <header>
         <h1>Internship Application Form-Future Center</h1>
         <p class="description">دليل شامل للتجمعات الصحية والمستشفيات التابعة لها في مختلف مناطق المملكة. انقر على أي تجمع لرؤية المستشفيات التابعة له.</p>
-        <p class="description">للتقديم للامتياز والاشراف الأكاديمي عبر مركز المستقبل للتدريب الصحي بقم بالنقر على المستشفى</p>
+        <p class="description">للتقديم للامتياز والاشراف الأكاديمي عبر مركز المستقبل للتدريب الصحي بقم بالنقر على التخصص المطلوب</p>
 
     </header>
 
@@ -256,10 +256,19 @@
         <input type="text" class="search-box" placeholder="ابحث عن مستشفى أو تجمع...">
         
         <div class="controls">
-            <button id="hyperlink">تقديم طلب طب عام  </button>
-            <button id="hyperlink">تقديم طلب اسنان</button>
-            <button id="hyperlink">تقديم طلب صيدلة</button>
-            <button id="hyperlink" style="text-align: left; margin-right: auto; display: block; background-color: #28a745; color: white;"> تجديد خطاب اشراف</button>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">
+  <button id="general-request">تقديم طلب طب عام</button>
+</a>
+
+<a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">
+  <button id="dental-request">تقديم طلب اسنان</button>
+</a>
+
+<a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">
+  <button id="pharmacy-request">تقديم طلب صيدلة</button>
+</a>
+
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank" style="display: block; margin: 0 auto; background-color: #28a745; color: white; text-align: center; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-size: 1rem;">تجديد خطاب اشراف</a>
         </div>
 
         <div class="headers-grid">
@@ -468,6 +477,7 @@
                 <div class="hospital"><a href="https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform" target="_blank">حديثي الولادة والأطفال</a></div>
             </div>
         </div>
+
         <!-- Cluster 7 Content -->
         <div class="cluster-content" id="cluster-7">
             <h2>تجمع الشرقية الصحي</h2>
@@ -880,6 +890,17 @@
                 });
             });
             
+            // Add links to the three buttons
+            document.getElementById('general-request').onclick = function() {
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform', '_blank');
+            };
+            document.getElementById('dental-request').onclick = function() {
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform', '_blank');
+            };
+            document.getElementById('pharmacy-request').onclick = function() {
+                window.open('https://docs.google.com/forms/d/e/1FAIpQLScwYb443lYN9qjIBcljlM0y-Mpd9PyMQWwOJpv7sinMKe-boQ/viewform', '_blank');
+            };
+
             // Show the first cluster by default
             if (gridHeaders.length > 0) {
                 showCluster(1);
